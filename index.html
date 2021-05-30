@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>kaboom</title>
+  <meta charset="utf-8">
+  <style>
+    * {
+      margin: 0;
+    }
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+<script src="https://kaboomjs.com/lib/0.5.0/kaboom.js"></script>
+<script src="https://kaboomjs.com/lib/0.5.0/plugins/aseprite.js"></script>
+<script src="https://kaboomjs.com/lib/0.5.0/plugins/pedit.js"></script>
+<script src="https://kaboomjs.com/pub/legacy/kbmsprite.js"></script>
+
+  <script>
+
+kaboom({
+  ...{"fullscreen":true,"width":240,"height":240,"scale":1,"startScene":"main","version":"0.5.0","clearColor":[0.7215686274509804,0.8705882352941177,1,1]},
+  global: true,
+  plugins: [ peditPlugin, asepritePlugin, kbmspritePlugin ],
+});
+loadSprite("block", "sprites/block.png");
+loadSprite("blue-block", "sprites/blue-block.png");
+loadSprite("blue-brick", "sprites/blue-brick.png");
+loadSprite("blue-goomba", "sprites/blue-goomba.png");
+loadSprite("blue-steel", "sprites/blue-steel.png");
+loadSprite("blue-surprise", "sprites/blue-surprise.png");
+loadSprite("brick", "sprites/brick.png");
+loadSprite("coin", "sprites/coin.png");
+loadSprite("goomba", "sprites/goomba.png");
+loadSprite("mario-standing", "sprites/mario-standing.png");
+loadSprite("mushroom", "sprites/mushroom.png");
+loadSprite("pipe-left", "sprites/pipe-left.png");
+loadSprite("pipe-right", "sprites/pipe-right.png");
+loadSprite("pipe-top-left", "sprites/pipe-top-left.png");
+loadSprite("pipe-top-right", "sprites/pipe-top-right.png");
+loadSprite("question", "sprites/question.png");
+loadSprite("unboxed", "sprites/unboxed.png");
+scene("main", (args = {}) => {
+const MOVE_SPEED = 120
+const JUMP_FORCE = 360
+const BIG_JUMP_FORCE = 550
+let CURRENT_JUMP_FORCE = JUMP_FORCE
+const ENEMY_SPEED = 20
+const FALL_DEATH = 600
+
+let isJumping = true
+
+
+layers(['obj', 'ui'], 'obj')
+
+const maps = [
+  [
+    '                              ',
+    '                              ',
+    '                              ',
+    '                              ',
+    '                              ',
+    '    %   =*=%=                 ',
+    '                              ',
+    '                      -+      ',
+    '             ^   ^    ()      ',
+    'xxxxxxxxxxxxxxxxxxxxxxxx    xx',
+  ], [
+    '£                              £',
+    '£                              £',
+    '£                              £',
+    '£        @@@@@      s          £',
+    '£                 s s s        £',
+    '£               s s s s s    -+£',
+    '£      !      s s s s s s    ()£',
+    'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz',
+  ]
+]
+
+
+const levelConfig = {
+  width: 20,
+  height: 20,
+  '=' : [sprite('brick'), solid()],
+  'x' : [sprite('block'), solid()],
+  '$' : [sprite('coin'), 'coin'],
+  '%' : [sprite('question'), 'coin-surprise', solid()],
+  '*' : [sprite('question'), 'mushroom-surprise', solid()],   
+  '}' : [sprite('unboxed'), solid()], 
+  '(' : [sprite('pipe-left'), scale(0.5), solid()],
+  ')' : [sprite('pipe-right'), scale(0.5), solid()], 
+  '-' : [sprite('pipe-top-left'), scale(0.5), solid(), 'pipe'],
+  '+' : [sprite('pipe-top-right'), scale(0.5), solid(), 'pipe'], 
+  '^' : [sprite('goomba'), solid(), 'dangerous'], 
+  '#' : [sprite('mushroom'), 'mushroom', body()], 
+  '£' : [sprite('blue-brick'), solid(),scale(0.5)],
+  'z' : [sprite('blue-block'), solid(), scale(0.5)], 
+  '@' : [sprite('blue-surprise'), solid(), scale(0.5), 'coin-surprise'],
+  '!' : [sprite('blue-goomba'), 'dangerous', scale(0.5)],
+  's' : [sprite('blue-steel'), solid(), scale(0.5)],  
+}
+
+const levelIndex = args.level ?? 0 
+const gameLevel = addLevel(maps[levelIndex], levelConfig)
+});
+start("main");
+
+  </script>
+</body>
+
+</html>
